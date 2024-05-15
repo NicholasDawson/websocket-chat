@@ -1,9 +1,0 @@
-name: websocket-chat
-
-services:
-  server:
-    image: server
-    restart: on-failure
-    build: './'
-    ports:
-      - "42113:80"
