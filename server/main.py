@@ -1,5 +1,4 @@
-import json
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from dataclasses import dataclass
 from datetime import datetime
 from asyncio import create_task
@@ -8,15 +7,10 @@ app = FastAPI()
 
 @dataclass
 class Message:
-    client_id: str
+    clientId: str
     fromName: str
-    timeSent: datetime
+    timeSent: str
     text: str
-
-    def to_dict(self):
-        result = self.__dict__
-        result['timeSent'] = result['timeSent'].isoformat()
-        return result
 
 @dataclass
 class ChatClient:
@@ -32,20 +26,25 @@ def get_unique_client_id(username: str, ws: WebSocket):
 def recieve_message(msg: Message):
     # For every other client
     for client in clients:
-        if client != msg.client_id:
-            create_task(clients[client].ws.send_json(msg.to_dict()))
+        create_task(clients[client].ws.send_json(msg.__dict__))
 
 @app.websocket("/chat")
 async def ws_chat(ws: WebSocket):
     await ws.accept()
     
     # Register client
-    username = await ws.receive_text()
-    client_id = get_unique_client_id(username, ws)
-    await ws.send_text(f"Logged in as: {client_id}")
-    clients[client_id] = ChatClient(username, ws)
+    try:
+        username = await ws.receive_text()
+        client_id = get_unique_client_id(username, ws)
+        await ws.send_text(client_id)
+        clients[client_id] = ChatClient(username, ws)
+    except WebSocketDisconnect:
+        pass
     
-    while True:
-        new_msg = await ws.receive_text()
-        recieve_message(Message(client_id, username, datetime.now(), new_msg))
+    try:
+        while True:
+            new_msg = await ws.receive_text()
+            recieve_message(Message(client_id, username, datetime.now().isoformat(), new_msg))
+    except WebSocketDisconnect:
+        del clients[client_id]
 

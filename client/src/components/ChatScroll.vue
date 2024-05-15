@@ -3,14 +3,14 @@ import { storeToRefs } from "pinia";
 import { useChatStore } from "../stores/ChatStore";
 
 const chatStore = useChatStore();
-const { messages } = storeToRefs(chatStore);
+const { messages, clientId } = storeToRefs(chatStore);
 </script>
 
 <template>
   <div id="chat-scroll">
     <div
       v-for="msg in messages.slice().reverse()"
-      :class="[msg.wasSent ? 'align-self-end' : 'align-self-start']"
+      :class="[msg.clientId === clientId ? 'align-self-end' : 'align-self-start']"
     >
       ({{ msg.fromName }}): {{ msg.text }}
     </div>

@@ -1,8 +1,8 @@
 export class Message {
   constructor(
+    public clientId: string,
     public fromName: string,
     public timeSent: Date,
-    public wasSent: boolean,
     public text: string
   ) {}
 }

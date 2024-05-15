@@ -5,11 +5,11 @@ import { useChatStore } from "../stores/ChatStore";
 import { storeToRefs } from "pinia";
 
 const chatStore = useChatStore();
-const { username } = storeToRefs(chatStore);
+const { clientId } = storeToRefs(chatStore);
 
-// We want to prompt the user to login if no username
+// We want to prompt the user to login if no clientId
 const router = useRouter();
-if (username.value === "") {
+if (clientId.value === "") {
   router.push("/");
 }
 
@@ -20,8 +20,8 @@ if (username.value === "") {
     <div class="flex justify-content-between align-items-center">
       <h1>WebSocket Chat</h1>
       <div class="flex align-items-center">
-        Username:
-        <pre> {{ username }} </pre>
+        Client ID:
+        <pre> {{ clientId }} </pre>
         <Button
           icon="pi pi-sign-out"
           severity="danger"

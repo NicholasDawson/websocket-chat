@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import InputText from "primevue/inputtext";
 import Button from "primevue/button";
-import { useRouter } from "vue-router";
 import { useChatStore } from "../stores/ChatStore";
 import { storeToRefs } from "pinia";
 
-const router = useRouter();
 const chatStore = useChatStore();
 const { username } = storeToRefs(chatStore);
 </script>
@@ -17,7 +15,7 @@ const { username } = storeToRefs(chatStore);
       <label for="username">Username</label>
       <InputText autocomplete="off" id="username" v-model="username" />
     </div>
-    <Button label="Login" :disabled="!username" @click="router.push('/chat')" />
+    <Button label="Login" :disabled="!username" @click="chatStore.login" />
   </div>
 </template>
 
