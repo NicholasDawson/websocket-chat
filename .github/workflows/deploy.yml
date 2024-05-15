@@ -23,7 +23,7 @@ jobs:
       - name: Install dependencies
         uses: bahmutov/npm-install@v1
         with:
-          working-director: client
+          working-directory: client
 
       - name: Build project
         run: npm run build
