@@ -28,7 +28,7 @@ def recieve_message(msg: Message):
     for client in clients:
         create_task(clients[client].ws.send_json(msg.__dict__))
 
-@app.websocket("/chat")
+@app.websocket("/ws/chat")
 async def ws_chat(ws: WebSocket):
     await ws.accept()
     
